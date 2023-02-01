@@ -1,0 +1,54 @@
+---
+layout: "@layouts/MarkdownPostLayout.astro"
+pubDate: 2022-12-01
+title: SQL date range queries
+language: en
+author: Mathias Wellner
+categories:
+  - software
+tags:
+  - sql
+  - query
+  - postgresql
+---
+
+In my company work, we often use two _Date_ or _DateTime_ fields to express a range when the row data is valid.
+
+```sql
+CREATE TABLE test (
+  id int NOT NULL PRIMARY KEY,
+  title varchar(255) NULL,
+  valid_from date NULL,
+  valid_to date NULL,
+);
+```
+
+Both **valid_from** and **valid_to** are nullable. NULL means an unlimited bound to one or both sides. The query to check for a valid range of a given **@date** is quite long due to the null checks.
+
+```sql
+SELECT * FROM test WHERE
+  (valid_from IS NULL OR @date >= valid_from) AND
+  (valid_to IS NULL OR @date < valid_to)
+```
+
+Note that this query interprets the lower bound as inclusive and the upper one as exclusive. This makes it easier to define e.g. month ranges with the same day.
+
+Another option is the [between operator](https://www.postgresqltutorial.com/postgresql-tutorial/postgresql-between/) which is available in most SQL dialects. The problem is that it does not work with NULL as open limit.
+
+[PostgreSQL](https://www.postgresql.org) offers [range types](https://www.postgresql.org/docs/current/rangetypes.html), which greatly simplify range queries like the one above. For our example, the function **daterange(date1, date2)** creates a date range, either argument can be null for an unbounded range limit. With that in mind and the **@>** operator, the range query simplifies.
+
+```sql
+SELECT * FROM test WHERE daterange(valid_from, valid_to) @> @date
+```
+
+Multiple ranges can also be combined with a _Multirange_ like **datemultirange**. To go even further, the range types can also be used for a column data type.
+
+```sql
+CREATE TABLE test (
+  id int NOT NULL PRIMARY KEY,
+  title varchar(255) NULL,
+  valid daterange NOT NULL,
+);
+```
+
+However, retrieving this object with an object-relational mapper (ORM) requires the generic type [NpgsqlRange](https://www.npgsql.org/efcore/mapping/range.html) only available in the _Entity Framework Core_ version of _Npgsql_.

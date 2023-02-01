@@ -1,7 +1,11 @@
 ---
-import BlogPost from "../components/BlogPost.astro";
-import BaseLayout from "../layouts/BaseLayout.astro";
-const allPosts = await Astro.glob("../pages/**/*.mdx");
+import { changeLanguage } from "i18next";
+import BlogPost from "../../components/BlogPost.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+changeLanguage("en");
+
+const allPosts = await Astro.glob("../../pages/**/*.mdx");
 const pageTitle = "Blog";
 ---
 

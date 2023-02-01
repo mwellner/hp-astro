@@ -1,0 +1,12 @@
+---
+import { changeLanguage } from "i18next";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+changeLanguage("en");
+
+const pageTitle = "Astro Home";
+---
+
+<BaseLayout pageTitle={pageTitle}>
+  <h2>For better development</h2>
+</BaseLayout>
