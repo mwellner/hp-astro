@@ -5,7 +5,7 @@ export async function get() {
     title: "Mathias Wellner",
     description: "My journey learning Astro",
     site: "https://mwellner.de",
-    items: await pagesGlobToRssItems(import.meta.glob("./**/*.md")),
-    customData: `<language>en-us</language>`,
+    items: await pagesGlobToRssItems(import.meta.glob("./**/*.mdx")),
+    customData: `<language>de-de</language>`,
   });
 }
