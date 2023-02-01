@@ -7,21 +7,24 @@ import "../styles/global.scss";
 const { pageTitle } = Astro.props;
 ---
 
+<!DOCTYPE html>
 <html lang={i18next.language}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
     <HeadHrefLangs />
   </head>
   <body>
     <Header />
-    <slot />
+    <div class="container py-4">
+      <slot />
+    </div>
     <Footer />
     <script>
-      import "../scripts/menu.js";
+      import "../scripts/bootstrap.js";
     </script>
   </body>
 </html>

@@ -1,5 +1,5 @@
 ---
-import { changeLanguage } from "i18next";
+import i18next, { changeLanguage } from "i18next";
 import BlogPost from "../components/BlogPost.astro";
 import PageLayout from "../layouts/PageLayout.astro";
 
@@ -12,9 +12,11 @@ const pageTitle = "Blog";
 <PageLayout pageTitle={pageTitle}>
   <ul>
     {
-      allPosts.map((post) => (
-        <BlogPost url={post.url} title={post.frontmatter.title} />
-      ))
+      allPosts
+        .filter((post) => post.frontmatter.language == i18next.language)
+        .map((post) => (
+          <BlogPost url={post.url} title={post.frontmatter.title} />
+        ))
     }
   </ul>
 </PageLayout>

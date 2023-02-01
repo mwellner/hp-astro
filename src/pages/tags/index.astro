@@ -6,7 +6,7 @@ changeLanguage("de");
 
 const allPosts = await Astro.glob("../**/*.mdx");
 const tags = [
-  ...new Set(allPosts.map((post) => post.frontmatter.tags).flat()),
+    ...new Set(allPosts.map((post) => post.frontmatter.tags).flat()),
 ].sort();
 const pageTitle = "Tags";
 ---
