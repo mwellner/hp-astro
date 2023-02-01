@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/MarkdownPostLayout.astro
 title: "My First Blog Post"
-pubDate: 2023-01-25
+date: 2023-01-25
 description: "This is the first post of my new Astro blog."
 author: Mathias Wellner
 image:

@@ -1,0 +1,11 @@
+---
+import { Picture } from "@astrojs/image/components";
+const { src, alt } = Astro.props;
+---
+
+<Picture
+  src={src}
+  widths={[200, 400, 800]}
+  sizes="(max-width: 800px) 100vw, 800px"
+  alt={alt}
+/>
