@@ -4,6 +4,7 @@ import { HeadHrefLangs } from "astro-i18next/components";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.scss";
+import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min?url";
 const { pageTitle } = Astro.props;
 ---
 
@@ -23,8 +24,6 @@ const { pageTitle } = Astro.props;
       <slot />
     </div>
     <Footer />
-    <script>
-      import "../scripts/bootstrap.js";
-    </script>
+    <script src={bootstrap}></script>
   </body>
 </html>
