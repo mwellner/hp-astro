@@ -1,0 +1,22 @@
+---
+import i18next, { changeLanguage } from "i18next";
+import PageLayout from "@layouts/PageLayout.astro";
+import Tag from "@components/Tag.astro";
+
+changeLanguage("en");
+
+const allPosts = await Astro.glob("../../../blog/**/*.mdx");
+const tags = [
+    ...new Set(allPosts
+        .filter((post) => post.frontmatter.language === i18next.language)
+        .map((post) => post.frontmatter.tags)
+        .flat()),
+].sort();
+const pageTitle = "Tags";
+---
+
+<PageLayout pageTitle={pageTitle}>
+  <div class="tags">
+    {tags.map((tag) => <Tag tag={tag} />)}
+  </div>
+</PageLayout>

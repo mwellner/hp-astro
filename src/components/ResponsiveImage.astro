@@ -1,11 +1,12 @@
 ---
 import { Picture } from "@astrojs/image/components";
-const { src, alt } = Astro.props;
+const { src, alt, aspectRatio } = Astro.props;
 ---
 
 <Picture
   src={src}
-  widths={[200, 400, 800]}
-  sizes="(max-width: 800px) 100vw, 800px"
+  widths={[600, 900, 1600]}
+  sizes="(max-width: 300px) 100vw, (max-width: 600px) 600px, (max-width: 900px) 900px, 1600px"
+  aspectRatio={aspectRatio}
   alt={alt}
 />

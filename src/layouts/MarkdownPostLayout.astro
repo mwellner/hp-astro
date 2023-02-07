@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import { changeLanguage } from "i18next";
+import Tag from "@components/Tag.astro";
 const { frontmatter } = Astro.props;
 
 changeLanguage(frontmatter.language);
@@ -13,13 +14,7 @@ changeLanguage(frontmatter.language);
   <slot />
 
   <div class="tags">
-    {
-      frontmatter.tags.map((tag) => (
-        <p class="tag">
-          <a href={`/tags/${tag}`}>{tag}</a>
-        </p>
-      ))
-    }
+    {frontmatter.tags.map((tag) => <Tag tag={tag} />)}
   </div>
 </BaseLayout>
 

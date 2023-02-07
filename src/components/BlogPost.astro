@@ -1,5 +1,28 @@
 ---
-const { url, title } = Astro.props;
+import { getImage } from "@astrojs/image";
+const { url, title, imageRef, imageAlt } = Astro.props;
+const { src, alt } =
+  imageRef !== undefined
+    ? await getImage({
+        src: imageRef,
+        alt: imageAlt,
+        width: 500,
+        height: 500,
+      })
+    : { src: "", alt: "" };
 ---
 
-<li><a href={url}>{title}</a></li>
+<div class="card">
+  {
+    imageRef !== undefined ? (
+      <img src={src} class="card-img-top" alt={alt} />
+    ) : (
+      <span />
+    )
+  }
+  <!--  -->
+  <div class="card-body">
+    <h5 class="card-title">{title}</h5>
+    <a href={url} class="stretched-link">Mehr</a>
+  </div>
+</div>

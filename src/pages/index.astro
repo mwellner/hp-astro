@@ -1,22 +1,27 @@
 ---
 import i18next, { changeLanguage } from "i18next";
-import BlogPost from "../components/BlogPost.astro";
-import PageLayout from "../layouts/PageLayout.astro";
+import BlogPost from "@components/BlogPost.astro";
+import PageLayout from "@layouts/PageLayout.astro";
 
 changeLanguage("de");
 
-const allPosts = await Astro.glob("../pages/**/*.mdx");
+const allPosts = await Astro.glob("./blog/**/*.mdx");
+allPosts.sort((a, b) => Date.parse(b.frontmatter.pubDate) - Date.parse(a.frontmatter.pubDate));
 const pageTitle = "Blog";
 ---
 
 <PageLayout pageTitle={pageTitle}>
-  <ul>
+  <div class="grid mt-4">
     {
       allPosts
         .filter((post) => post.frontmatter.language == i18next.language)
         .map((post) => (
-          <BlogPost url={post.url} title={post.frontmatter.title} />
+          <BlogPost
+            url={post.url}
+            title={post.frontmatter.title}
+            imageRef={post.frontmatter.image?.ref}
+          />
         ))
     }
-  </ul>
+  </div>
 </PageLayout>

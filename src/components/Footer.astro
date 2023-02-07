@@ -1,16 +1,18 @@
 ---
-import Social from "./Social.astro";
 ---
 
 <footer>
-  <Social platform="twitter" username="wellnair" />
-  <Social platform="github" username="mwellner" />
+  <a href="https://twitter.com/wellnair">twitter</a>
+  <a href="https://www.facebook.com/mathias.wellner">facebook</a>
+  <a href="https://gruene.social/@mwellner">mastodon</a>
 </footer>
 
 <style>
   footer {
     display: flex;
+    justify-content: center;
     gap: 1rem;
     margin-top: 2rem;
+    margin-bottom: 1rem;
   }
 </style>

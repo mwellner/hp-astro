@@ -1,0 +1,44 @@
+---
+import i18next, { changeLanguage } from "i18next";
+import BlogPost from "@components/BlogPost.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+
+changeLanguage("de");
+
+export async function getStaticPaths() {
+  const allPosts = await Astro.glob("../../blog/**/*.mdx");
+  const uniqueTags = [
+    ...new Set(
+      allPosts
+        .filter((post) => post.frontmatter.language === i18next.language)
+        .map((post) => post.frontmatter.tags)
+        .flat()
+    ),
+  ];
+  return uniqueTags.map((tag) => {
+    const filteredPosts = allPosts.filter((post) =>
+      post.frontmatter.tags.includes(tag)
+    );
+    return {
+      params: { tag },
+      props: { posts: filteredPosts },
+    };
+  });
+}
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<PageLayout pageTitle={tag}>
+  <div class="grid mt-4">
+    {
+      posts.map((post) => (
+        <BlogPost
+          url={post.url}
+          title={post.frontmatter.title}
+          imageRef={post.frontmatter.image?.ref}
+        />
+      ))
+    }
+  </div>
+</PageLayout>
