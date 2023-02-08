@@ -17,7 +17,8 @@ const { src, alt } =
   <img src={src} class="card-img-top" alt={alt} loading="lazy" />
   <div class="card-body">
     <div class="card-text fw-light">{new Date(date).toLocaleDateString()}</div>
-    <h5 class="card-title">{title}</h5>
-    <a href={url} class="stretched-link">Mehr</a>
+    <h5 class="card-title">
+      <a href={url} class="text-decoration-none stretched-link">{title}</a>
+    </h5>
   </div>
 </div>
