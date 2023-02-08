@@ -1,0 +1,40 @@
+---
+import i18next, { changeLanguage } from "i18next";
+import BlogPost from "@components/BlogPost.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+import { getCollection } from "astro:content";
+import { localizePath } from "astro-i18next";
+
+changeLanguage("de");
+
+export async function getStaticPaths() {
+    const allPosts = await getCollection("blog", ({ data }) => data.language === i18next.language);
+    const uniqueTags = [
+        ...new Set(allPosts.map((post) => post.data.tags).flat()),
+    ];
+    return uniqueTags.map((tag) => {
+        const filteredPosts = allPosts.filter((post) => post.data.tags.includes(tag));
+        return {
+            params: { tag },
+            props: { posts: filteredPosts },
+        };
+    });
+}
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<PageLayout pageTitle={tag}>
+  <div class="grid mt-4">
+    {
+      posts.map((post) => (
+        <BlogPost
+          url={localizePath(post.slug)}
+          title={post.data.title}
+          imageRef={post.data.image?.src}
+          imageAlt={post.data.image?.alt}
+        />
+      ))
+    }
+  </div>
+</PageLayout>

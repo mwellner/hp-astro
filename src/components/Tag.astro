@@ -1,7 +1,9 @@
 ---
+import { localizePath } from "astro-i18next";
 const { tag } = Astro.props;
 ---
 
-<a class="badge bg-primary me-2 text-decoration-none" href={`/blog/tags/${tag}`}
-  >{tag}</a
+<a
+  class="badge bg-primary me-2 text-decoration-none"
+  href={localizePath(`/tags/${tag}`)}>{tag}</a
 >

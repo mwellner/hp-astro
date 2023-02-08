@@ -1,6 +1,6 @@
 ---
 import { getImage } from "@astrojs/image";
-const { url, title, imageRef, imageAlt } = Astro.props;
+const { url, title, date, imageRef, imageAlt } = Astro.props;
 const { src, alt } =
   imageRef !== undefined
     ? await getImage({
@@ -20,8 +20,9 @@ const { src, alt } =
       <span />
     )
   }
-  <!--  -->
+
   <div class="card-body">
+    <div class="card-text fw-light">{new Date(date).toLocaleDateString()}</div>
     <h5 class="card-title">{title}</h5>
     <a href={url} class="stretched-link">Mehr</a>
   </div>
