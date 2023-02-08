@@ -8,17 +8,22 @@ import { localizePath } from "astro-i18next";
 changeLanguage("en");
 
 export async function getStaticPaths() {
-    const allPosts = await getCollection("blog", ({ data }) => data.language === i18next.language);
-    const uniqueTags = [
-        ...new Set(allPosts.map((post) => post.data.tags).flat()),
-    ];
-    return uniqueTags.map((tag) => {
-        const filteredPosts = allPosts.filter((post) => post.data.tags.includes(tag));
-        return {
-            params: { tag },
-            props: { posts: filteredPosts },
-        };
-    });
+  const allPosts = await getCollection(
+    "blog",
+    ({ data }) => data.language === i18next.language
+  );
+  const uniqueTags = [
+    ...new Set(allPosts.map((post) => post.data.tags).flat()),
+  ];
+  return uniqueTags.map((tag) => {
+    const filteredPosts = allPosts.filter((post) =>
+      post.data.tags.includes(tag)
+    );
+    return {
+      params: { tag },
+      props: { posts: filteredPosts },
+    };
+  });
 }
 const { tag } = Astro.params;
 const { posts } = Astro.props;
@@ -31,7 +36,7 @@ const { posts } = Astro.props;
         <BlogPost
           url={localizePath(post.slug)}
           title={post.data.title}
-          imageRef={post.data.image?.src}
+          imageSrc={post.data.image?.src}
           imageAlt={post.data.image?.alt}
         />
       ))

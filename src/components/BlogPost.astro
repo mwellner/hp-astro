@@ -1,26 +1,20 @@
 ---
 import { getImage } from "@astrojs/image";
-const { url, title, date, imageRef, imageAlt } = Astro.props;
+const { url, title, date, imageSrc, imageAlt } = Astro.props;
 const { src, alt } =
-  imageRef !== undefined
+  imageSrc !== undefined
     ? await getImage({
-        src: imageRef,
+        src: imageSrc,
         alt: imageAlt,
         width: 500,
         height: 500,
+        format: "avif",
       })
     : { src: "", alt: "" };
 ---
 
 <div class="card">
-  {
-    imageRef !== undefined ? (
-      <img src={src} class="card-img-top" alt={alt} />
-    ) : (
-      <span />
-    )
-  }
-
+  <img src={src} class="card-img-top" alt={alt} loading="lazy" />
   <div class="card-body">
     <div class="card-text fw-light">{new Date(date).toLocaleDateString()}</div>
     <h5 class="card-title">{title}</h5>
