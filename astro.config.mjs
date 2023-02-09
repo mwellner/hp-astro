@@ -5,8 +5,8 @@ import image from "@astrojs/image";
 import mdx from "@astrojs/mdx";
 import astroI18next from "astro-i18next";
 import sitemap from "@astrojs/sitemap";
+import robotsTxt from "astro-robots-txt";
 
-// https://astro.build/config
 export default defineConfig({
   markdown: {
     shikiConfig: {
@@ -31,5 +31,6 @@ export default defineConfig({
         },
       },
     }),
+    robotsTxt(),
   ],
 });
