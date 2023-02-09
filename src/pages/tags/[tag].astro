@@ -19,6 +19,9 @@ export async function getStaticPaths() {
     const filteredPosts = allPosts.filter((post) =>
       post.data.tags.includes(tag)
     );
+    filteredPosts.sort(
+      (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+    );
     return {
       params: { tag },
       props: { posts: filteredPosts },
@@ -36,6 +39,7 @@ const { posts } = Astro.props;
         <BlogPost
           url={localizePath(post.slug)}
           title={post.data.title}
+          date={post.data.pubDate}
           imageSrc={post.data.image?.src}
           imageAlt={post.data.image?.alt}
         />
