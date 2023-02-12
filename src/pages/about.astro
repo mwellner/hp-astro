@@ -1,10 +1,16 @@
 ---
 import PageLayout from "../layouts/PageLayout.astro";
 import { t, changeLanguage } from "i18next";
+import { AstroSeo } from "@astrolib/seo";
+import ResponsiveImage from "@components/ResponsiveImage.astro";
 
 changeLanguage("de");
 ---
 
+<AstroSeo title={t("about.title") || "About"} />
+
 <PageLayout pageTitle={t("about.title")}>
-  <p>Hello</p>
+  <ResponsiveImage src="/img/portrait.jpg" alt="Porträt" aspectRatio="1:1" />
+  <p>{t("about.general")}</p>
+  <p>{t("about.politics")}</p>
 </PageLayout>

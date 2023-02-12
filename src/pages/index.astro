@@ -4,6 +4,7 @@ import BlogPost from "@components/BlogPost.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import { getCollection } from "astro:content";
 import { localizePath } from "astro-i18next";
+import { AstroSeo } from "@astrolib/seo";
 
 changeLanguage("de");
 
@@ -15,6 +16,8 @@ allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 allPosts = allPosts.slice(0, 12);
 const pageTitle = "Blog";
 ---
+
+<AstroSeo title="Blog Mathias Wellner" />
 
 <PageLayout pageTitle={pageTitle}>
   <div class="grid mt-4 mb-4">

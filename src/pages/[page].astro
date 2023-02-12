@@ -3,6 +3,9 @@ import BlogPost from "@components/BlogPost.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import { getCollection } from "astro:content";
 import { localizePath } from "astro-i18next";
+import { changeLanguage } from "i18next";
+
+changeLanguage("de");
 
 export async function getStaticPaths({ paginate }) {
   const allPosts = await getCollection(
