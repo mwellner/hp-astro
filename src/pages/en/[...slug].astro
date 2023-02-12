@@ -2,6 +2,7 @@
 import { changeLanguage } from "i18next";
 import MarkdownPostLayout from "@layouts/MarkdownPostLayout.astro";
 import { getCollection } from "astro:content";
+import { AstroSeo } from "@astrolib/seo";
 
 changeLanguage("en");
 
@@ -17,6 +18,26 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await entry.render();
 ---
+
+<AstroSeo
+  title={entry.data.title}
+  description={entry.data.description}
+  openGraph={{
+    url: entry.url,
+    images: [
+      {
+        url: entry.data.image.src,
+        alt: entry.data.image.alt,
+      },
+    ],
+    site_name: "Mathias Wellner",
+  }}
+  twitter={{
+    handle: "@wellnair",
+    site: "@wellnair",
+    cardType: "summary_large_image",
+  }}
+/>
 
 <MarkdownPostLayout frontmatter={entry.data}>
   <Content />

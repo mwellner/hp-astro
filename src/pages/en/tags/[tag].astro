@@ -4,6 +4,7 @@ import BlogPost from "@components/BlogPost.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import { getCollection } from "astro:content";
 import { localizePath } from "astro-i18next";
+import { AstroSeo } from "@astrolib/seo";
 
 changeLanguage("en");
 
@@ -32,7 +33,9 @@ const { tag } = Astro.params;
 const { posts } = Astro.props;
 ---
 
-<PageLayout pageTitle={tag}>
+<AstroSeo title={tag} />
+
+<PageLayout pageTitle={`Articles with "${tag}"`}>
   <div class="grid mt-4">
     {
       posts.map((post) => (
