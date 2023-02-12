@@ -7,7 +7,7 @@ const { sources, image } = imageSrc
       alt: imageAlt,
       src: imageSrc,
       widths: [500],
-      aspectRatio: 1,
+      aspectRatio: "4:3",
       formats: ["avif", "webp", "jpg"],
     })
   : { sources: [], image: null };
@@ -20,7 +20,12 @@ const { sources, image } = imageSrc
         <source type={source.type} srcset={source.srcset} />
       ))
     }
-    <img src={image?.src || ""} class="card-img-top" alt={imageAlt} />
+    <img
+      src={image?.src || ""}
+      class="card-img-top"
+      alt={imageAlt}
+      loading="lazy"
+    />
   </picture>
   <div class="card-body">
     <div class="card-text fw-light">

@@ -6,13 +6,14 @@ import { getCollection } from "astro:content";
 changeLanguage("de");
 
 export async function getStaticPaths() {
-  const blogEntries = await getCollection("blog");
-  return blogEntries
-    .filter((blogEntry) => blogEntry.data.language === "de")
-    .map((entry) => ({
-      params: { slug: entry.slug },
-      props: { entry },
-    }));
+  const blogEntries = await getCollection(
+    "blog",
+    ({ data }) => data.language === "de"
+  );
+  return blogEntries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
 }
 const { entry } = Astro.props;
 const { Content } = await entry.render();

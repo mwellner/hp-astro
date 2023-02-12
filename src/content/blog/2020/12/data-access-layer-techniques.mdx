@@ -1,0 +1,259 @@
+---
+title: Data Access Layer Techniques
+pubDate: 2020-12-29
+slug: 2022/12/29/data-access-layer-techniques
+language: en
+author: Mathias Wellner
+image:
+  src: /img/2020/code.png
+  alt: Code-Beispiel
+tags:
+  - c#
+  - dal
+  - sql
+  - orm
+  - odbc
+  - dapper
+  - entity framework
+---
+
+I have spent the last days exploring ways to map [SQL](https://en.wikipedia.org/wiki/SQL) result sets to objects as used in object-oriented programming languages as C# or Java. This process is known as [object-relational mapping](https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping) and is needed for all projects accessing data from a SQL database, the results must be converted to objects for further processing or sending them out as JSON.
+
+There is a huge number of mapping tools out there, ranging from widely supported low-level access tools like [Open Database Connectivity (ODBC)](https://en.wikipedia.org/wiki/Open_Database_Connectivity) to highly sophisticated tools like [NHibernate](https://nhibernate.info) or [Entity Framework](https://de.wikipedia.org/wiki/Entity_Framework). I have also checked out [Dapper](https://github.com/StackExchange/Dapper), situated somewhere in the middle, focussing very much on the actual mapping step.
+
+1. Database-first or code-first?
+1. How to write queries?
+1. Support for complex queries with multiple joins
+1. Amount of boiler-plate code for a new entity
+1. Performance
+
+### Common Data Model
+
+So let's consider an existing table for a person, written in [PostgreSQL](https://www.postgresql.org/) with columns for ID (primary key), first name, last name, and birth date.
+
+```sql
+CREATE TABLE public.person (
+	id serial NOT NULL,
+	first_name varchar(100) NOT NULL,
+	last_name varchar(100) NOT NULL,
+	birth_date date NULL,
+	CONSTRAINT person_pk PRIMARY KEY (id)
+);
+```
+
+This is the database-first approach, which means that you start off with a database. In most situations, there is already a database, so SQL knowledge is required to understand and modify the tables and indexes. There are quite some tools to help you with that, I discovered [DBeaver](https://dbeaver.io/), which supports most databases. _DBeaver_ provides a graphical interface for adding tables, columns and has a query analyzer to check execution plans.
+
+For most approaches, we need a corresponding entity class, also known as POCO ([plain old CLR object](https://en.wikipedia.org/wiki/Plain_old_CLR_object)). This is pretty much the same structure as in the database table, but this time as a C# class. Since all of our tables have a primary key column _id_, we can use an abstract base class to prevent code duplication.
+
+```csharp
+using System;
+
+public abstract class BaseEntity
+{
+    public int id { get; set; }
+}
+
+public class Person : BaseEntity
+{
+    public string first_name { get; set; }
+    public string last_name { get; set; }
+    public DateTime birth_date { get; set; }
+}
+```
+
+That is indeed a little tedious, the exact same fields, but poco code generators could help here to create this automatically.
+
+### Open Database Connectivity (ODBC)
+
+Let's first take a look at ODBC, which provides low-level access to the database. One implementation in our team uses ODBC functions directly, with the help of generated code for each database table. Mapping is done directly with reading result set columns by position and converting to the exact data type.
+
+```csharp
+using System.Data.Odbc;
+
+public class PersonOdbcRepository
+{
+    private string connectionString;
+    private string[] fields = new string[] { "id", "first_name", "last_name", "birth_date" };
+    private string tableName = "person";
+
+    public PersonOdbcRepository(string connectionString)
+    {
+        this.connectionString = connectionString;
+    }
+
+    public Person GetById(int id)
+    {
+        string queryString = $"SELECT { string.Join(',', fields) } FROM { tableName } WHERE id = ?";
+        OdbcCommand command = new OdbcCommand(queryString);
+        var person = new Person();
+
+        using (var connection = new OdbcConnection(connectionString))
+        {
+            connection.Open();
+            command.Connection = connection;
+            command.Parameters.AddWithValue("id", id);
+            var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                person.id = reader.GetInt32(0);
+                person.first_name = reader.GetString(1);
+                person.last_name = reader.GetString(2);
+                person.birth_date = reader.GetDateTime(3);
+            }
+            reader.Close();
+        }
+        return person;
+    }
+}
+```
+
+This is quite a lot to write for a simple operation. And be aware that command parameters (note the **?** in the sql string) and result columns are all position-dependent. And the reading gets more complicated with _Null_ values. So this is surely a high-performant solution, but takes a lot of lines. And consider doing a join statement this way, takes way too much effort. Surely code generation can play its role here to cover the usual suspects ([CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)), but this does not help for non-standard queries with multiple joins or nullable conditions.
+
+### Dapper
+
+Dapper is calling itself a _simple object mapper for .Net_. So writing out an SQL query is still needed, but the actual mapping is far simpler than with ODBC. Also [Dapper.Contrib](https://www.nuget.org/packages/Dapper.Contrib/) contains some often used functions for reading, updating, deleting or inserting items. But to give that full power, a few annotations are needed. The table name must be provided.
+
+```csharp
+using System;
+using Dapper.Contrib.Extensions;
+
+[Table("person")]
+public class Person : BaseEntity
+{
+    public string first_name { get; set; }
+    public string last_name { get; set; }
+    public DateTime birth_date { get; set; }
+    public ICollection<Address> addresses { get; set; }
+}
+```
+
+The primary key must also be annotated with the _Key_ attribute, unless it's the default _id_ or _Id_. But with that in place, an abstract base class can be used that is used by all entity-related repositories. Dapper extends the [IDbConnection](https://docs.microsoft.com/en-us/dotnet/api/system.data.idbconnection?view=net-5.0), implemented here with [NpgsqlConnection (PostgreSQL)](https://www.npgsql.org/doc/api/Npgsql.NpgsqlConnection.html).
+
+Also note the property _addresses_, which is a one-to-many relationship with a second table _address_. We will use that later on to demonstrate a join.
+
+```csharp
+using System.Collections.Generic;
+using System.Data;
+using Dapper.Contrib.Extensions;
+using Npgsql;
+
+public abstract class BaseRepository<T> where T : BaseEntity
+{
+    protected readonly string connectionString;
+
+    public BaseRepository(string connectionString)
+    {
+        this.connectionString = connectionString;
+    }
+
+    public long Insert(T entity)
+    {
+        using (IDbConnection connection = new NpgsqlConnection(connectionString))
+        {
+            return connection.Insert(entity);
+        }
+    }
+
+    public bool Delete(T entity)
+    {
+        using (IDbConnection connection = new NpgsqlConnection(connectionString))
+        {
+            return connection.Delete(entity);
+        }
+    }
+
+    public T GetById(int id)
+    {
+        using (IDbConnection connection = new NpgsqlConnection(connectionString))
+        {
+            return connection.Get<T>(id);
+        }
+    }
+
+    public IEnumerable<T> GetList()
+    {
+        using (IDbConnection connection = new NpgsqlConnection(connectionString))
+        {
+            return connection.GetAll<T>();
+        }
+
+    }
+
+    public void Update(T entity)
+    {
+        using (IDbConnection connection = new NpgsqlConnection(connectionString))
+        {
+            connection.Update(entity);
+        }
+    }
+}
+```
+
+This covers some simple use cases for all repositories. The actual repository can focus on more complex queries, tailored to the needs of the application. A simple example of Dapper's mapping power would be a _SELECT_ query mapped to a list of results.
+
+```csharp
+public IEnumerable<Person> GetPeopleWithMinimumAge(int minAge)
+{
+    var maxBirthDate = DateTime.Now.AddYears(-minAge);
+    string sql = "SELECT * FROM person WHERE birth_date < @maxBirthDate ORDER BY birth_date ASC";
+    using (IDbConnection connection = new NpgsqlConnection(connectionString))
+    {
+        return connection.Query<Person>(sql, new { maxBirthDate = maxBirthDate });
+    }
+}
+```
+
+Notice Dappers _Query_ method in line 7, which receives the SQL query string with parameter _@maxBirthDate_ and all parameters as [anonymous type](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/anonymous-types). The result set is converted automatically to the entity _Person_. It would be easy to limit the returned columns or add more conditions.
+
+So now for something more challenging, we will do a join with the _address_ table. Dapper calls this [multi mapping](https://github.com/StackExchange/Dapper#multi-mapping) and documents a simple case of a one-to-one relationship. In our case, one person could have multiple addresses, so the join returns more rows than we expect. To fill up the _address_ list, a dictionary is used to keep track of already cached _person_ objects.
+
+```csharp
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using Dapper;
+using Npgsql;
+
+public class PersonRepository : BaseRepository<Person>
+{
+    public PersonRepository(string connectionString) : base(connectionString) { }
+
+    public IEnumerable<Person> GetPeopleWithAddress()
+    {
+        string sql = "SELECT * FROM person p LEFT JOIN address a ON a.person_id = p.id ORDER BY p.last_name";
+        using (IDbConnection connection = new NpgsqlConnection(connectionString))
+        {
+            var personDictionary = new Dictionary<int, Person>();
+
+            var list = connection.Query<Person, Address, Person>(sql, (person, address) =>
+            {
+                Person personEntry;
+
+                if (!personDictionary.TryGetValue(person.id, out personEntry))
+                {
+                    personEntry = person;
+                    personEntry.addresses = new List<Address>();
+                    personDictionary.Add(personEntry.id, personEntry);
+                }
+                personEntry.addresses.Add(address);
+                return personEntry;
+            });
+            return list.Distinct();
+        }
+    }
+}
+```
+
+The _Query_ method (line 18) now has three types, _Person_, _Address_, and _Person_ again. The first two are mapped for each row for the result of the JOIN query, and a function maps that to the _person_ entity, which contains a list for all related addresses. The dictionary collects all person entities already analyzed and allows to add addresses to the same person entity. Please also note the _Distinct()_ at the very end, which removes duplicate entries. This may seem a little complicated, but covers most cases pretty well. Also consider how that would be done with ODBC means.
+
+On the other end of the spectrum, solutions like _Entity Framework_ do not require that kind of code, they provide built-in functions for that (see [Eager Loading of Related Data](https://docs.microsoft.com/en-us/ef/core/querying/related-data/eager)). However, that comes with a price of limited flexibility and slower execution.
+
+### Entity Framework
+
+As already mentioned, _Entity Framework_ provides more features than Dapper. But it requires a very different approach, as it is designed to be code-first. So you would start out with a model (C# class) which can be automatically converted to the correct database structure. This makes your model the source of truth and also generates database migrations on demand, whenever you changed something. As convenient and fast as this seems, it has some caveats and risks. [Tim Corey](https://www.iamtimcorey.com) has a very nice video on that topic ([Entity Framework Best Practices](https://www.youtube.com/watch?v=qkJ9keBmQWo)), that I can really recommend.
+
+His main argument is that EF is a powerful tool, but requires quite some knowledge, especially with SQL to be used in a production environment. But since it seems so easy, also junior developers use it, hoping to avoid dealing with the daunting details of relational databases. But many queries work well in development and hit a performance barrier later in production with millions of records. And then you still need to dig into the details, analyze queries and check your indexes.
+
+### Conclusion
+
+So in the moment I would go for Dapper in new projects. I am not the total expert in SQL but know enough about it to write my own queries and map the results back to my objects. _Entity Framework_ could also be an option for smaller or demo projects, as it takes a lot of the difficult parts away. But it works best if you can start from scratch, reverse-engineering the models to an existing database does not seem a good way to go. And performance is worse, as also the [Dapper performance test results](https://github.com/StackExchange/Dapper#performance) indicate. So whan going for a long-term enterprise-level project, having more control and insight seems better.
