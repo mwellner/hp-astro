@@ -23,6 +23,7 @@ const pageTitle = "Blog";
         <BlogPost
           url={localizePath(post.slug)}
           title={post.data.title}
+          description={post.data.description}
           date={post.data.pubDate}
           imageSrc={post.data.image?.src}
           imageAlt={post.data.image?.alt}
@@ -57,7 +58,7 @@ const pageTitle = "Blog";
       {
         page.currentPage !== page.lastPage ? (
           <li class="page-item">
-            <a class="page-link" href={page.url.prev}>
+            <a class="page-link" href={page.url.next}>
               {page.currentPage + 1}
             </a>
           </li>

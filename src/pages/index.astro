@@ -23,6 +23,7 @@ const pageTitle = "Blog";
         <BlogPost
           url={localizePath(post.slug)}
           title={post.data.title}
+          description={post.data.description}
           date={post.data.pubDate}
           imageSrc={post.data.image?.src}
           imageAlt={post.data.image?.alt}

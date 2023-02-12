@@ -1,6 +1,6 @@
 ---
 import { getPicture } from "@astrojs/image";
-const { url, title, date, imageSrc, imageAlt } = Astro.props;
+const { url, title, description, date, imageSrc, imageAlt } = Astro.props;
 
 const { sources, image } = imageSrc
   ? await getPicture({
@@ -34,5 +34,6 @@ const { sources, image } = imageSrc
     <h5 class="card-title">
       <a href={url} class="text-decoration-none stretched-link">{title}</a>
     </h5>
+    <p class="card-text">{description}</p>
   </div>
 </div>
