@@ -1,25 +1,25 @@
 ---
-import i18next, { changeLanguage } from "i18next";
 import BlogPost from "@components/BlogPost.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import { getCollection } from "astro:content";
 import { localizePath } from "astro-i18next";
 
-changeLanguage("de");
-
-let allPosts = await getCollection(
-  "blog",
-  ({ data }) => data.language === i18next.language
-);
-allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
-allPosts = allPosts.slice(0, 12);
+export async function getStaticPaths({ paginate }) {
+  const allPosts = await getCollection(
+    "blog",
+    ({ data }) => data.language === "de"
+  );
+  allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+  return paginate(allPosts, { pageSize: 12 });
+}
+const { page } = Astro.props;
 const pageTitle = "Blog";
 ---
 
 <PageLayout pageTitle={pageTitle}>
   <div class="grid mt-4 mb-4">
     {
-      allPosts.map((post) => (
+      page.data.map((post) => (
         <BlogPost
           url={localizePath(post.slug)}
           title={post.data.title}
@@ -34,7 +34,20 @@ const pageTitle = "Blog";
   <nav aria-label="Seitennavigation">
     <ul class="pagination">
       <li class="page-item">
-        <a class="page-link" href="/2/">Nächste Seite</a>
+        {
+          page.url.prev ? (
+            <a class="page-link" href={page.url.prev}>
+              Vorherige Seite
+            </a>
+          ) : null
+        }
+        {
+          page.url.next ? (
+            <a class="page-link" href={page.url.next}>
+              Nächste Seite
+            </a>
+          ) : null
+        }
       </li>
     </ul>
   </nav>
