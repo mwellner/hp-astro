@@ -1,0 +1,40 @@
+---
+import { getPicture } from "@astrojs/image";
+const { url, title, description, date, imageSrc, imageAlt, aspectRatio } =
+  Astro.props;
+
+const { sources, image } = imageSrc
+  ? await getPicture({
+      alt: imageAlt,
+      src: imageSrc,
+      widths: [500],
+      aspectRatio: aspectRatio || "4:3",
+      formats: ["avif", "webp", "jpg"],
+    })
+  : { sources: [], image: null };
+---
+
+<div class="card">
+  <picture>
+    {
+      sources.map((source) => (
+        <source type={source.type} srcset={source.srcset} />
+      ))
+    }
+    <img
+      src={image?.src || ""}
+      class="card-img-top"
+      alt={imageAlt}
+      loading="lazy"
+    />
+  </picture>
+  <div class="card-body">
+    <div class="card-text fw-light">
+      {new Date(date).toLocaleDateString()}
+    </div>
+    <h5 class="card-title">
+      <a href={url} class="text-decoration-none stretched-link">{title}</a>
+    </h5>
+    <p class="card-text">{description}</p>
+  </div>
+</div>

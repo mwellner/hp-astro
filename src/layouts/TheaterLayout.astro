@@ -1,0 +1,63 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import { changeLanguage } from "i18next";
+import ResponsiveImage from "@components/ResponsiveImage.astro";
+const { frontmatter } = Astro.props;
+
+changeLanguage("de");
+---
+
+<BaseLayout pageTitle={frontmatter.title}>
+  <span>{new Date(frontmatter.date).toLocaleDateString()}</span>
+  <h1>{frontmatter.title}</h1>
+
+  <div class="row">
+    <div class="col-md">
+      <ResponsiveImage
+        src={frontmatter.cover.src}
+        alt={frontmatter.cover.alt}
+        aspectRatio={frontmatter.cover.aspectRatio || "4:3"}
+      />
+    </div>
+    <div class="col-md">
+      <dl>
+        <dt>Regie</dt>
+        <dd>{frontmatter.director}</dd>
+        <dt>Autor:in</dt>
+        <dd>{frontmatter.author}</dd>
+        <dt>Produktion</dt>
+        <dd>{frontmatter.producer}</dd>
+        <dt>Aufführungsort</dt>
+        <dd>{frontmatter.location}</dd>
+      </dl>
+    </div>
+  </div>
+
+  <slot />
+
+  <h3>Besetzung</h3>
+  <div class="cast">
+    <dl>
+      {
+        frontmatter.roles.map((roleEntry) => (
+          <div class="cast-entry">
+            <dt>{roleEntry.role}</dt>
+            <dd>{roleEntry.actor}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</BaseLayout>
+
+<style>
+  .cast {
+    column-width: 300px;
+    column-gap: 1rem;
+  }
+  .cast-entry {
+    page-break-inside: avoid;
+    break-inside: avoid-column;
+    display: table;
+  }
+</style>
