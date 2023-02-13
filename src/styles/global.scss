@@ -6,9 +6,12 @@ $badge-font-size: 0.95em;
 $badge-padding-y: 0.4em;
 $enable-shadows: true;
 $enable-gradients: true;
+// card settings
 $card-box-shadow: 5px 3px 5px hsla(125, 90%, 20%, 0.25);
 $body-bg: hsla(1, 0%, 95%, 1);
 $card-bg: hsla(1, 0%, 100%, 1);
+// blockquote settings
+$blockquote-font-size: 110%;
 
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/variables-dark";
@@ -58,4 +61,16 @@ picture > img {
   align-items: start;
   gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(20em, 1fr));
+}
+
+blockquote {
+  border-left: 2px $primary solid;
+  background-color: $gray-400;
+  margin-bottom: $blockquote-margin-y;
+  padding: 0.5rem 1rem;
+  @include font-size($blockquote-font-size);
+
+  > :last-child {
+    margin-bottom: 0;
+  }
 }
