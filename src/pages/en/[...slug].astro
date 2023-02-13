@@ -1,6 +1,6 @@
 ---
 import { changeLanguage } from "i18next";
-import MarkdownPostLayout from "@layouts/MarkdownPostLayout.astro";
+import BlogPostLayout from "@layouts/BlogPostLayout.astro";
 import { getCollection } from "astro:content";
 import { AstroSeo } from "@astrolib/seo";
 
@@ -39,6 +39,6 @@ const { Content } = await entry.render();
   }}
 />
 
-<MarkdownPostLayout frontmatter={entry.data}>
+<BlogPostLayout frontmatter={entry.data}>
   <Content />
-</MarkdownPostLayout>
+</BlogPostLayout>
