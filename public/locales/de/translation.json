@@ -3,5 +3,8 @@
     "title": "Über mich",
     "general": "Mein Name ist Mathias Wellner und ich wohne in Leipzig. Beruflich arbeite ich bei der DB Netz AG als Software-Entwickler, vor allem Front-End-Entwicklung mit Angular.",
     "politics": "Ich bin Mitglied der Partei 'Bündnis 90/Die Grünen' im Kreisverband Leipzig. Mittlerweile bin ich einer der Sprechenden für die Arbeitsgruppe Klima und Energie und auch in der Podcast-Gruppe aktiv."
+  },
+  "dsgvo": {
+    "title": "Datenschutz"
   }
 }
