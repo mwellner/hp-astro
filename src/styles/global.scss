@@ -4,6 +4,11 @@
 $primary: hsla(125, 90%, 20%, 1);
 $badge-font-size: 0.95em;
 $badge-padding-y: 0.4em;
+$enable-shadows: true;
+$enable-gradients: true;
+$card-box-shadow: 5px 3px 5px hsla(125, 90%, 20%, 0.25);
+$body-bg: hsla(1, 0%, 95%, 1);
+$card-bg: hsla(1, 0%, 100%, 1);
 
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/variables-dark";
