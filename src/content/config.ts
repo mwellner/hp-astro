@@ -31,6 +31,15 @@ const theaterCollection = defineCollection({
       alt: z.string(),
       aspectRatio: z.string().optional(),
     }),
+    images: z
+      .array(
+        z.object({
+          src: z.string(),
+          alt: z.string(),
+          aspectRatio: z.string().optional(),
+        })
+      )
+      .optional(),
     roles: z.array(
       z.object({
         role: z.string(),

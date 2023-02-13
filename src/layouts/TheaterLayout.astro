@@ -2,16 +2,16 @@
 import BaseLayout from "./BaseLayout.astro";
 import { changeLanguage } from "i18next";
 import ResponsiveImage from "@components/ResponsiveImage.astro";
+import { Picture } from "@astrojs/image/components";
 const { frontmatter } = Astro.props;
 
 changeLanguage("de");
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
-  <span>{new Date(frontmatter.date).toLocaleDateString()}</span>
   <h1>{frontmatter.title}</h1>
 
-  <div class="row">
+  <div class="row mt-4">
     <div class="col-md">
       <ResponsiveImage
         src={frontmatter.cover.src}
@@ -27,6 +27,8 @@ changeLanguage("de");
         <dd>{frontmatter.author}</dd>
         <dt>Produktion</dt>
         <dd>{frontmatter.producer}</dd>
+        <dt>Premiere</dt>
+        <dd>{frontmatter.date.toLocaleDateString()}</dd>
         <dt>Aufführungsort</dt>
         <dd>{frontmatter.location}</dd>
       </dl>
@@ -48,9 +50,30 @@ changeLanguage("de");
       }
     </dl>
   </div>
+
+  <div class="gallery mt-4">
+    {
+      frontmatter.images.map((img) => (
+        <Picture
+          src={img.src}
+          alt={img.alt}
+          widths={[600]}
+          sizes="600px"
+          aspectRatio={img.aspectRatio || "4:3"}
+        />
+      ))
+    }
+  </div>
 </BaseLayout>
 
 <style>
+  .gallery {
+    column-width: 300px;
+    column-gap: 1rem;
+  }
+  .gallery img {
+    max-width: 100%;
+  }
   .cast {
     column-width: 300px;
     column-gap: 1rem;
