@@ -1,0 +1,85 @@
+@import "bootstrap/scss/functions";
+
+// include any default variable overrides here
+$primary: hsla(345, 100%, 40%, 1);
+$badge-font-size: 0.95em;
+$badge-padding-y: 0.4em;
+$enable-shadows: true;
+$enable-gradients: true;
+// card settings
+$card-box-shadow: 5px 3px 5px hsla(50, 90%, 50%, 0.4);
+$body-bg: hsla(1, 0%, 8%, 1);
+$body-color: hsla(1, 0%, 90%, 1);
+$card-bg: hsla(50, 10%, 80%, 1);
+$card-border-radius: 1rem;
+// blockquote settings
+$blockquote-font-size: 110%;
+
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+
+// include any map overrides here
+
+// required parts
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/root";
+
+// optional parts
+@import "bootstrap/scss/utilities";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/nav";
+@import "bootstrap/scss/navbar";
+@import "bootstrap/scss/pagination";
+@import "bootstrap/scss/images";
+@import "bootstrap/scss/badge";
+@import "bootstrap/scss/card";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/helpers";
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/utilities/api";
+
+// my own code
+.astro-code {
+  padding: 0.5rem 1rem;
+  font-size: 115%;
+}
+
+picture > img {
+  max-width: 100%;
+}
+
+@include media-breakpoint-up(xl) {
+  picture > img {
+    max-width: 900px;
+  }
+}
+
+.grid {
+  display: grid;
+  align-items: start;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(20em, 1fr));
+}
+
+blockquote {
+  border-left: 2px $primary solid;
+  background-color: $gray-400;
+  margin-bottom: $blockquote-margin-y;
+  padding: 0.5rem 1rem;
+  @include font-size($blockquote-font-size);
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+h1 {
+  color: lighten($primary, 10%);
+}
+
+.card {
+  color: $gray-900;
+}

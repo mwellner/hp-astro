@@ -1,6 +1,6 @@
 ---
 import { changeLanguage } from "i18next";
-import PageLayout from "@layouts/PageLayout.astro";
+import TheaterPageLayout from "@layouts/TheaterPageLayout.astro";
 import { getCollection } from "astro:content";
 import { localizePath } from "astro-i18next";
 import { AstroSeo } from "@astrolib/seo";
@@ -15,7 +15,7 @@ const pageTitle = "Theater";
 
 <AstroSeo title={pageTitle} />
 
-<PageLayout pageTitle={pageTitle}>
+<TheaterPageLayout pageTitle={pageTitle}>
   <div class="grid mt-4 mb-4">
     {
       allProductions.map((post) => (
@@ -26,4 +26,4 @@ const pageTitle = "Theater";
       ))
     }
   </div>
-</PageLayout>
+</TheaterPageLayout>
