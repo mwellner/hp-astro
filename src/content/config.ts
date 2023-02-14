@@ -21,7 +21,6 @@ const blogCollection = defineCollection({
 const theaterCollection = defineCollection({
   schema: z.object({
     title: z.string(),
-    description: z.string(),
     author: z.string(),
     location: z.string(),
     date: z.date(),
