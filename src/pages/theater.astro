@@ -21,12 +21,7 @@ const pageTitle = "Theater";
       allProductions.map((post) => (
         <TheaterProduction
           url={localizePath("theater/" + post.slug)}
-          title={post.data.title}
-          description={post.data.description}
-          date={post.data.date}
-          imageSrc={post.data.cover?.src}
-          imageAlt={post.data.cover?.alt}
-          aspectRatio={post.data.cover?.aspectRatio}
+          frontmatter={post.data}
         />
       ))
     }

@@ -5,10 +5,11 @@ const blogCollection = defineCollection({
     title: z.string(),
     description: z.string().optional(),
     tags: z.array(z.string()),
-    image: z
+    cover: z
       .object({
         src: z.string(),
         alt: z.string(),
+        aspectRatio: z.string().optional(),
       })
       .optional(),
     pubDate: z.date(),

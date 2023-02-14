@@ -1,13 +1,13 @@
 ---
 import { getPicture } from "@astrojs/image";
-const { url, title, description, date, imageSrc, imageAlt } = Astro.props;
+const { url, frontmatter } = Astro.props;
 
-const { sources, image } = imageSrc
+const { sources, image } = frontmatter.cover
   ? await getPicture({
-      alt: imageAlt,
-      src: imageSrc,
+      alt: frontmatter.cover?.alt,
+      src: frontmatter.cover?.src,
       widths: [500],
-      aspectRatio: "4:3",
+      aspectRatio: frontmatter.cover?.aspectRatio || "4:3",
       formats: ["avif", "webp", "jpg"],
     })
   : { sources: [], image: null };
@@ -23,17 +23,19 @@ const { sources, image } = imageSrc
     <img
       src={image?.src || ""}
       class="card-img-top"
-      alt={imageAlt}
+      alt={frontmatter.cover?.alt}
       loading="lazy"
     />
   </picture>
   <div class="card-body">
     <div class="card-text fw-light">
-      {new Date(date).toLocaleDateString()}
+      {new Date(frontmatter.pubDate).toLocaleDateString()}
     </div>
     <h5 class="card-title">
-      <a href={url} class="text-decoration-none stretched-link">{title}</a>
+      <a href={url} class="text-decoration-none stretched-link"
+        >{frontmatter.title}</a
+      >
     </h5>
-    <p class="card-text">{description}</p>
+    <p class="card-text">{frontmatter.description}</p>
   </div>
 </div>

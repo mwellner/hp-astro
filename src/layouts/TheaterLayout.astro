@@ -11,7 +11,7 @@ changeLanguage("de");
 <BaseLayout pageTitle={frontmatter.title}>
   <h1>{frontmatter.title}</h1>
 
-  <div class="row mt-4">
+  <div class="row mt-4 mb-3">
     <div class="col-md">
       <ResponsiveImage
         src={frontmatter.cover.src}
@@ -53,7 +53,7 @@ changeLanguage("de");
 
   <div class="gallery mt-4">
     {
-      frontmatter.images.map((img) => (
+      frontmatter.images?.map((img) => (
         <Picture
           src={img.src}
           alt={img.alt}
@@ -73,6 +73,7 @@ changeLanguage("de");
   }
   .gallery img {
     max-width: 100%;
+    margin-bottom: 1rem;
   }
   .cast {
     column-width: 300px;
