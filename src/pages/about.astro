@@ -1,5 +1,5 @@
 ---
-import PageLayout from "../layouts/PageLayout.astro";
+import PageLayout from "@layouts/PageLayout.astro";
 import { t, changeLanguage } from "i18next";
 import { AstroSeo } from "@astrolib/seo";
 import ResponsiveImage from "@components/ResponsiveImage.astro";
@@ -12,5 +12,15 @@ changeLanguage("de");
 <PageLayout pageTitle={t("about.title")}>
   <ResponsiveImage src="/img/portrait.jpg" alt="Porträt" aspectRatio="1:1" />
   <p>{t("about.general")}</p>
+  <p>{t("about.job")}</p>
+  <ul>
+    <li>JavaScript/TypeScript</li>
+    <li>CSS/SCSS</li>
+    <li>C#</li>
+    <li>ASP.NET Web API</li>
+    <li>SQL/PostgreSQL</li>
+    <li>Dapper</li>
+    <li>Docker</li>
+  </ul>
   <p>{t("about.politics")}</p>
 </PageLayout>

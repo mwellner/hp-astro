@@ -3,10 +3,12 @@ import { Picture } from "@astrojs/image/components";
 const { src, alt, aspectRatio } = Astro.props;
 ---
 
-<Picture
-  src={src}
-  widths={[600, 900, 1600]}
-  sizes="(max-width: 300px) 100vw, (max-width: 600px) 600px, (max-width: 900px) 900px, 1600px"
-  aspectRatio={aspectRatio}
-  alt={alt}
-/>
+<div class="my-3">
+  <Picture
+    src={src}
+    widths={[600, 900, 1600]}
+    sizes="(max-width: 300px) 100vw, (max-width: 600px) 600px, (max-width: 900px) 900px, 1600px"
+    aspectRatio={aspectRatio}
+    alt={alt}
+  />
+</div>

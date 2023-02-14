@@ -1,7 +1,8 @@
 {
   "about": {
     "title": "About me",
-    "general": "My name is Mathias Wellner and I live in Leipzig. I work for DB Netz AG as software developer, mainly front-end (Angular).",
+    "general": "My name is Mathias Wellner and I live in Leipzig. I have also lived in Dresden, Zurich and Darmstadt. And for one year, I have lived in Blacksburg/Virginia.",
+    "job": "I work for DB Netz AG as software developer, mainly front-end (Angular). But I have studied and used a lot of technologies, such as",
     "politics": "I am member of the Green Party in the Leipzig district chapter. I am co-spokesman for the group climate and energy and also working in the podcast group."
   },
   "dsgvo": {
