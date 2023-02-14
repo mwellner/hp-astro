@@ -39,14 +39,7 @@ const { posts } = Astro.props;
   <div class="grid mt-4">
     {
       posts.map((post) => (
-        <BlogPost
-          url={localizePath(post.slug)}
-          title={post.data.title}
-          description={post.data.description}
-          date={post.data.pubDate}
-          imageSrc={post.data.image?.src}
-          imageAlt={post.data.image?.alt}
-        />
+        <BlogPost url={localizePath(post.slug)} frontmatter={post.data} />
       ))
     }
   </div>

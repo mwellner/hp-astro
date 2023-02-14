@@ -22,13 +22,7 @@ const pageTitle = "Blog";
   <div class="grid mt-4">
     {
       allPosts.map((post) => (
-        <BlogPost
-          url={localizePath(post.slug)}
-          title={post.data.title}
-          date={post.data.pubDate}
-          imageSrc={post.data.image?.src}
-          imageAlt={post.data.image?.alt}
-        />
+        <BlogPost url={localizePath(post.slug)} frontmatter={post.data} />
       ))
     }
   </div>
