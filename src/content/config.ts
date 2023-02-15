@@ -12,7 +12,7 @@ const blogCollection = defineCollection({
         aspectRatio: z.string().optional(),
       })
       .optional(),
-    pubDate: z.date(),
+    date: z.date(),
     language: z.enum(["en", "de"]),
     author: z.string().default("Mathias Wellner"),
   }),

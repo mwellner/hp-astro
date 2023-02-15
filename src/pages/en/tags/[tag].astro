@@ -20,9 +20,7 @@ export async function getStaticPaths() {
     const filteredPosts = allPosts.filter((post) =>
       post.data.tags.includes(tag)
     );
-    filteredPosts.sort(
-      (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
-    );
+    filteredPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
     return {
       params: { tag },
       props: { posts: filteredPosts },

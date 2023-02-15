@@ -29,7 +29,7 @@ const { sources, image } = frontmatter.cover
   </picture>
   <div class="card-body">
     <div class="card-text fw-light">
-      {new Date(frontmatter.pubDate).toLocaleDateString()}
+      {frontmatter.date.toLocaleDateString()}
     </div>
     <h5 class="card-title">
       <a href={url} class="text-decoration-none stretched-link"

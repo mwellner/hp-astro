@@ -9,7 +9,7 @@ export async function get() {
     site: "https://mwellner.de",
     items: posts.map((post) => ({
       title: post.data.title,
-      pubDate: post.data.pubDate,
+      date: post.data.date,
       description: post.data.description,
       link: `${post.data.language === "en" ? "en/" : ""}${post.slug}`,
     })),

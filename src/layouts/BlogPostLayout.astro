@@ -9,7 +9,7 @@ changeLanguage(frontmatter.language);
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
-  <span>{new Date(frontmatter.pubDate).toLocaleDateString()}</span>
+  <span>{frontmatter.date.toLocaleDateString()}</span>
   <h1>{frontmatter.title}</h1>
 
   <slot />
