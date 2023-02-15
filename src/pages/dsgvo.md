@@ -1,5 +1,5 @@
 ---
-layout: "@layouts/BaseLayout.astro"
+layout: "@layouts/PageLayout.astro"
 ---
 
 # Datenschutz-Erklärung
