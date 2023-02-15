@@ -27,8 +27,8 @@ const { Content } = await entry.render();
     url: entry.url,
     images: [
       {
-        url: entry.data.cover.src,
-        alt: entry.data.cover.alt,
+        url: entry.data.cover?.src,
+        alt: entry.data.cover?.alt,
       },
     ],
     site_name: "Mathias Wellner",
