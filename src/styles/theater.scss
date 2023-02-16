@@ -2,14 +2,19 @@
 
 // include any default variable overrides here
 $primary: hsla(345, 100%, 40%, 1);
-$badge-font-size: 0.95em;
-$badge-padding-y: 0.4em;
 $enable-shadows: true;
 $enable-gradients: true;
-// card settings
-$card-box-shadow: 5px 3px 5px hsla(50, 90%, 50%, 0.4);
 $body-bg: hsla(1, 0%, 8%, 1);
 $body-color: hsla(1, 0%, 90%, 1);
+$font-family-sans-serif: "Noto Serif", sans-serif;
+$font-family-code: "Fira Code";
+
+// badge
+$badge-font-size: 0.95em;
+$badge-padding-y: 0.4em;
+
+// card settings
+$card-box-shadow: 5px 3px 5px hsla(50, 90%, 50%, 0.4);
 $card-bg: hsla(50, 10%, 80%, 1);
 $card-border-radius: 1rem;
 // blockquote settings
