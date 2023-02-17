@@ -1,0 +1,118 @@
+---
+date: 2023-02-17
+slug: 2023/02/17/odata
+title: Using OData
+description: Exploring the use of OData for fetching data.
+language: en
+author: Mathias Wellner
+tags:
+  - database
+  - sql
+  - dapper
+  - query
+  - odata
+  - entity framework
+---
+
+A typical use case in any administrative application is the display of paginated data in a table or data grid. We use [DevExtreme DataGrid](https://js.devexpress.com/Documentation/ApiReference/UI_Components/dxDataGrid/) for that purpose, which is a very powerful component. It allows
+
+- filtering by column,
+- global search term,
+- ordering by column, and
+- pagination.
+
+All of this should happen on the server, since we have huge amounts of data. For that you can either implement a custom store or use one of the predefined data sources.
+
+## Custom Store Implementation with Dapper
+
+To implement pagination, filtering and sorting, we need a couple of parameters from the client. We need two queries, one for the paginated items, the other for the overall count, both with similar filtering conditions (WHERE). Dapper has it's own [SqlBuilder](https://www.nuget.org/packages/Dapper.SqlBuilder/) available in the repository. It uses templates for selecting and the overall count queries with placeholders for common values.
+
+Both queries are concatanated and sent to the database for parallel execution. Therefore we use [QueryMultiple](https://www.learndapper.com/dapper-query/selecting-multiple-results).
+
+```csharp
+public PaginatedQueryResult<Item> GetPaginatedItems(
+    int take,
+    int skip,
+    string searchTerm,
+    string sortColumn,
+    bool sortDesc = false)
+{
+    var builder = new SqlBuilder();
+    var selectTemplate = builder.AddTemplate(@"
+        SELECT id, name, beschreibung, von, bis
+        FROM item /**where**/ /**orderby**/
+        LIMIT @take OFFSET @skip;", new { take, skip });
+    var countTemplate = builder.AddTemplate(@"
+        SELECT COUNT(*) FROM funktion f /**where**/;");
+
+    if (!string.IsNullOrEmpty(searchTerm))
+    {
+        string[] searchCols = { "name", "beschreibung" };
+        foreach (string searchCol in searchCols)
+        {
+            builder.OrWhere($"{searchCol} ILIKE @search");
+        }
+        builder.AddParameters(new { search = $"%{searchTerm}%" });
+    }
+    string sortModifier = sortDesc ? "DESC" : "ASC";
+    builder.OrderBy($"{sortColumn} {sortModifier}");
+
+    string sql = $"{selectTemplate.RawSql} {countTemplate.RawSql}";
+
+    using (var connection = new NpgsqlConnection(connectionString))
+    {
+        using (var grid = connection.QueryMultiple(sql, selectTemplate.Parameters))
+        {
+            // read result of first SQL query
+            var items = grid.Read<Item>();
+            // read result of second SQL query
+            var count = grid.ReadSingle<int>();
+
+            return new PaginatedQueryResult<Item>
+            {
+                TotalCount = count,
+                Data = items
+            };
+        }
+    }
+}
+```
+
+Although we have used _SqlBuilder_ to make it easier, the resulting code is quite heavy. And this covers only part of the functionality of the _DataGrid_ component.
+
+## Implementation with Entity Framework and OData
+
+Since our DataGrid component supports [OData](https://www.odata.org/), let's try to implement that as well. One big difference is that OData needs [Entity Framework](https://learn.microsoft.com/en-us/ef/core/) to work with. This requires some steps to set up, which will not be discussed here. Provided we have it all set up, the OData integration is quite simple, highlighted in [Up & Running w/ OData in ASP.NET 6](https://devblogs.microsoft.com/odata/up-running-w-odata-in-asp-net-6/).
+
+Entity Framework follows the [repository pattern](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design), therefore our items are defined in the DbContext.
+
+```csharp
+public class OurContext : DbContext
+{
+    public OurContext(DbContextOptions<OurContext> options) : base(options) { }
+
+    public DbSet<Item> Items { get; set; }
+}
+```
+
+The OData endpoint is then defined in the controller. With the magic _EnableQuery_ annotation OData uses the passed `DbSet<Item>` and applies additional operations on that.
+
+```csharp
+[HttpGet()]
+[EnableQuery(PageSize = 10)]
+public IQueryable<Item> GetItems()
+{
+    var dbContext = new OurContextFactory().CreateDbContext(connectionString);
+    return dbContext.Items;
+}
+```
+
+The possible parameters are shown in the [OData Basic Tutorial](https://www.odata.org/getting-started/basic-tutorial/) and include
+
+- `$filter` for filtering by column with different comparison operators
+- `$orderby` for sorting
+- `$top` and `$skip` for pagination
+- `$select` for reducing the returned columns
+- `$expand` for adding a related entity (join)
+
+This gives a lot of flexibility to the client, comparable to [GraphQL](https://graphql.org/). Security and performance must be considered before using this approach.
