@@ -13,7 +13,7 @@ let allPosts = await getCollection(
   ({ data }) => data.language === i18next.language
 );
 allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-allPosts = allPosts.slice(0, 12);
+allPosts = allPosts.slice(0, 10);
 const pageTitle = "Blog";
 ---
 
@@ -38,12 +38,5 @@ const pageTitle = "Blog";
 </PageLayout>
 
 <script>
-  var $grid = document.querySelector(".grid");
-  imagesLoaded($grid, function () {
-    new Masonry(".grid", {
-      itemSelector: ".card",
-      columnWidth: 400,
-      gutter: 18,
-    });
-  });
+  import "../scripts/masonry.js";
 </script>

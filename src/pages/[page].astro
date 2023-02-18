@@ -13,7 +13,7 @@ export async function getStaticPaths({ paginate }) {
     ({ data }) => data.language === "de"
   );
   allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-  return paginate(allPosts, { pageSize: 12 });
+  return paginate(allPosts, { pageSize: 10 });
 }
 const { page } = Astro.props;
 const pageTitle = "Blog";
@@ -72,3 +72,7 @@ const pageTitle = "Blog";
     </ul>
   </nav>
 </PageLayout>
+
+<script>
+  import "../scripts/masonry.js";
+</script>

@@ -29,12 +29,5 @@ const pageTitle = "Theater";
 </TheaterPageLayout>
 
 <script>
-  var $grid = document.querySelector(".grid");
-  imagesLoaded($grid, function () {
-    new Masonry(".grid", {
-      itemSelector: ".card",
-      columnWidth: 400,
-      gutter: 18,
-    });
-  });
+  import "../scripts/masonry.js";
 </script>
