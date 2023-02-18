@@ -13,7 +13,7 @@ const { sources, image } = frontmatter.cover
   : { sources: [], image: null };
 ---
 
-<div class="card">
+<div class="card mb-3">
   <picture>
     {
       sources.map((source) => (
@@ -44,3 +44,9 @@ const { sources, image } = frontmatter.cover
     </dl>
   </div>
 </div>
+
+<style>
+  .card {
+    width: 400px;
+  }
+</style>

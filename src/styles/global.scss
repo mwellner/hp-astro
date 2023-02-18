@@ -59,13 +59,6 @@ picture > img {
   }
 }
 
-.grid {
-  display: grid;
-  align-items: start;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(20em, 1fr));
-}
-
 blockquote {
   border-left: 2px $primary solid;
   background-color: $gray-400;

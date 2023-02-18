@@ -13,7 +13,7 @@ const { sources, image } = frontmatter.cover
   : { sources: [], image: null };
 ---
 
-<div class="card">
+<div class="card mb-3">
   <picture>
     {
       sources.map((source) => (
@@ -24,7 +24,6 @@ const { sources, image } = frontmatter.cover
       src={image?.src || ""}
       class="card-img-top"
       alt={frontmatter.cover?.alt}
-      loading="lazy"
     />
   </picture>
   <div class="card-body">
@@ -39,3 +38,9 @@ const { sources, image } = frontmatter.cover
     <p class="card-text">{frontmatter.description}</p>
   </div>
 </div>
+
+<style>
+  .card {
+    width: 400px;
+  }
+</style>

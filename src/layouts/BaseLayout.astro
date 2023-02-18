@@ -4,6 +4,8 @@ import { HeadHrefLangs } from "astro-i18next/components";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min?url";
+import masonry from "masonry-layout/dist/masonry.pkgd.min?url";
+import imagesLoaded from "imagesloaded/imagesloaded.pkgd.min?url";
 import "@fontsource/noto-serif";
 import "@fontsource/fira-code";
 ---
@@ -29,5 +31,7 @@ import "@fontsource/fira-code";
     </div>
     <Footer />
     <script src={bootstrap}></script>
+    <script src={imagesLoaded}></script>
+    <script src={masonry}></script>
   </body>
 </html>
