@@ -20,10 +20,12 @@ const pageTitle = "Blog";
 <AstroSeo title="Blog Mathias Wellner" />
 
 <PageLayout pageTitle={pageTitle}>
-  <div class="grid mt-4 mb-4">
+  <div class="grid row mt-4 mb-4">
     {
       allPosts.map((post) => (
-        <BlogPost url={localizePath(post.slug)} frontmatter={post.data} />
+        <div class="col-md-6 col-lg-4 mb-4">
+          <BlogPost url={localizePath(post.slug)} frontmatter={post.data} />
+        </div>
       ))
     }
   </div>

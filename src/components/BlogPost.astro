@@ -13,19 +13,21 @@ const { sources, image } = frontmatter.cover
   : { sources: [], image: null };
 ---
 
-<div class="card mb-3">
-  <picture>
-    {
-      sources.map((source) => (
-        <source type={source.type} srcset={source.srcset} />
-      ))
-    }
-    <img
-      src={image?.src || ""}
-      class="card-img-top"
-      alt={frontmatter.cover?.alt}
-    />
-  </picture>
+<div class="card">
+  {
+    image ? (
+      <picture>
+        {sources.map((source) => (
+          <source type={source.type} srcset={source.srcset} />
+        ))}
+        <img
+          src={image.src || ""}
+          class="card-img-top"
+          alt={frontmatter.cover?.alt}
+        />
+      </picture>
+    ) : null
+  }
   <div class="card-body">
     <div class="card-text fw-light">
       {frontmatter.date.toLocaleDateString()}
@@ -38,9 +40,3 @@ const { sources, image } = frontmatter.cover
     <p class="card-text">{frontmatter.description}</p>
   </div>
 </div>
-
-<style>
-  .card {
-    width: 400px;
-  }
-</style>

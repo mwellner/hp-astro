@@ -16,13 +16,15 @@ const pageTitle = "Theater";
 <AstroSeo title={pageTitle} />
 
 <TheaterPageLayout pageTitle={pageTitle}>
-  <div class="grid mt-4 mb-4">
+  <div class="grid row mt-4 mb-4">
     {
       allProductions.map((post) => (
-        <TheaterProduction
-          url={localizePath("theater/" + post.slug)}
-          frontmatter={post.data}
-        />
+        <div class="col-md-6 col-lg-4 mb-4">
+          <TheaterProduction
+            url={localizePath("theater/" + post.slug)}
+            frontmatter={post.data}
+          />
+        </div>
       ))
     }
   </div>
