@@ -1,0 +1,96 @@
+---
+date: 2023-02-18
+slug: 2023/02/18/masonry
+title: Masonry Layout and AstroJS
+description: How I added masonry layout to my blog.
+language: en
+author: Mathias Wellner
+tags:
+  - astrojs
+  - masonry
+  - css
+  - bootstrap
+---
+
+Recently, I have re-implemented my blog with [Astro](https://astro.build/). They have just released version 2.0 of Astro with some compelling features and since my previous solution (gridsome) has not been updated for years now, I decided to give Astro a chance. I sticked with most of my layout and structure, but had to change image handling.
+
+One challenge was how to integrate a masonry layout for my blog and theater pages. Therefore I needed to find a way to do this with
+
+- [AstroJS](https://astro.build/),
+- [Bootstrap](https://getbootstrap.com/) and
+- [Masonry](https://masonry.desandro.com/).
+
+Luckily, this case is [documented on the Bootstrap page on cards](https://getbootstrap.com/docs/5.0/components/card/#masonry). They provide an [example on how to integrate it](https://getbootstrap.com/docs/5.0/examples/masonry/), which served me as a starting point.
+
+## Base Layout
+
+First step is to install the required dependencies.
+
+```bash
+> npm install bootstrap
+> npm install masonry-layout
+> npm install imagesLoaded
+```
+
+You need to include the JS dependencies in your main layout.
+
+```html
+---
+import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min?url";
+import masonry from "masonry-layout/dist/masonry.pkgd.min?url";
+import imagesLoaded from "imagesloaded/imagesloaded.pkgd.min?url";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="/img/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content="{Astro.generator}" />
+  </head>
+  <body>
+    ...
+    <script src="{bootstrap}"></script>
+    <script src="{imagesLoaded}"></script>
+    <script src="{masonry}"></script>
+  </body>
+</html>
+```
+
+## Include Masonry
+
+Since I use images on my pages, I also needed to include the [imagesLoaded](https://imagesloaded.desandro.com/) library to update the layout after all images have been loaded. So my way of masonry initialization is bundled in one JavaScript file.
+
+```javascript
+var $grid = document.querySelector(".grid");
+imagesLoaded($grid, function () {
+  new Masonry(".grid", {
+    percentPosition: true,
+  });
+});
+```
+
+This file can be included wherever a masonry layout is needed. Just add the following snippet at the end of your page.
+
+```javascript
+<script>import "@scripts/masonry.js";</script>
+```
+
+This requires a path for `@scripts` to be present in `tsconfig.json`.
+
+## Markup
+
+Finally add the markup as suggested by bootstrap in the blog overview page.
+
+```html
+<div class="grid row mt-4">
+  { allPosts.map((post) => (
+  <div class="col-md-6 col-lg-4 mb-4">
+    <BlogPost url="{post.slug}" frontmatter="{post.data}" />
+  </div>
+  )) }
+</div>
+```
+
+Since I use `.grid` as hook for masonry, this CSS class is there together with Bootstrap's `.row`. This should do the trick.
