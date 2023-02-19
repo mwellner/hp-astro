@@ -5,6 +5,11 @@
     "job": "I work for DB Netz AG as software developer, mainly front-end (Angular). But I have studied and used a lot of technologies, such as",
     "politics": "I am member of the Green Party in the Leipzig district chapter. I am co-spokesman for the group climate and energy and also working in the podcast group."
   },
+  "contact": {
+    "address": "Address",
+    "on-request": "complete mailing address on request",
+    "title": "Contact"
+  },
   "dsgvo": {
     "title": "Privacy"
   },

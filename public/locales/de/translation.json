@@ -5,6 +5,11 @@
     "job": "Ich arbeite bei der DB Netz AG als Software-Entwickler, vor allem Front-End-Entwicklung mit Angular. Aber ich habe mich in den letzten Jahren noch mit vielen anderen Technologien beschäftigt, darunter",
     "politics": "Ich bin Mitglied der Partei 'Bündnis 90/Die Grünen' im Kreisverband Leipzig. Mittlerweile bin ich einer der Sprechenden für die Arbeitsgruppe Klima und Energie und auch in der Podcast-Gruppe aktiv."
   },
+  "contact": {
+    "address": "Anschrift",
+    "on-request": "genaue Anschrift auf Anfrage",
+    "title": "Kontakt"
+  },
   "dsgvo": {
     "title": "Datenschutz"
   },

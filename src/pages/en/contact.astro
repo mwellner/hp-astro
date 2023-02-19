@@ -1,0 +1,21 @@
+---
+import PageLayout from "@layouts/PageLayout.astro";
+import { t, changeLanguage } from "i18next";
+
+changeLanguage("en");
+---
+
+<PageLayout pageTitle={t("contact.title")}>
+  <dl>
+    <dt>E-Mail</dt>
+    <dd>mail[at]mwellner[dot]de</dd>
+    <dt>{t("contact.address")}</dt>
+    <dd>Mathias Wellner, Leipzig, {t("contact.on-request")}</dd>
+    <dt>Twitter</dt>
+    <dd><a href="https://twitter.com/wellnair">@wellnair</a></dd>
+    <dt>Mastadon</dt>
+    <dd>
+      <a href="https://gruene.social/@mwellner">@mwellner@gruene.social</a>
+    </dd>
+  </dl>
+</PageLayout>
