@@ -23,7 +23,7 @@ const pageTitle = "Blog";
   <div class="grid row mt-4 mb-4">
     {
       allPosts.map((post) => (
-        <div class="col-md-6 col-lg-4 mb-4">
+        <div class="col-md-6 col-lg-4 mb-3">
           <BlogPost url={localizePath(post.slug)} frontmatter={post.data} />
         </div>
       ))
