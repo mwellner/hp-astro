@@ -11,7 +11,7 @@ export default defineConfig({
   markdown: {
     shikiConfig: {
       theme: "dark-plus",
-      langs: ["sql", "javascript", "c#"],
+      langs: ["sql", "javascript", "csharp", "latex"],
       wrap: true,
     },
   },
